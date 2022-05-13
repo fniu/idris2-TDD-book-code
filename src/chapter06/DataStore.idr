@@ -51,18 +51,19 @@ getAllEntries store =
       store_items = items store in
   case size_store of
     0 => "Data store is empty.\n" 
-    S k => case rangeFromTo 0 k of
+    S k => 
+      case rangeFromTo 0 k of
        [] => "Error"
-       (x :: xs) => foldl1By (\acc, i => acc ++ case getEntry (cast i) store of
-                                                     Just (x, _) => show i ++ ": " ++ x
-                                                     _ => "Not found"
-                      )
-                      (\i => case getEntry (cast i) store of
-                                  Just (x, _) => show i ++ ": " ++ x
-                                  _ => "Not found"
-                      )
-                      (x :: xs)
-       
+       (x :: xs) => foldl1By (\acc, i => acc ++ getEntry' i store)
+                      (\i => getEntry' i store)
+                      (x :: xs) 
+        where
+          getEntry' : Nat -> DataStore -> String
+          getEntry' i store =
+            case getEntry (cast i) store of
+                 Just (x, _) => show i ++ ": " ++ x
+                 _ => "Not found"
+                       
 data Command : Schema -> Type where
   SetSchema : (newschema: Schema) -> Command schema'
   Add: SchemaType schema' -> Command schema'
