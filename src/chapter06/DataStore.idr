@@ -54,9 +54,7 @@ getAllEntries store =
     S k => 
       case rangeFromTo 0 k of
        [] => "Error"
-       (x :: xs) => foldl1By (\acc, i => acc ++ getEntry' i store)
-                      (\i => getEntry' i store)
-                      (x :: xs) 
+       (x :: xs) => foldl (\acc, i => acc ++ getEntry' i store) "" (x :: xs)
         where
           getEntry' : Nat -> DataStore -> String
           getEntry' i store =
