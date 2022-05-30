@@ -28,3 +28,4 @@ myReverse xs = reverse' [] xs
         reverse' {m = S len} acc (x :: xs)
                         = rewrite sym (plusSuccRightSucc k len) in
                                   (reverse' (x :: acc) xs)
+  
