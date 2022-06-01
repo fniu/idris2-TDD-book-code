@@ -1,5 +1,6 @@
 import Data.Nat
 import Data.Vect
+import Decidable.Equality.Core
 
 same_cons : {xs : List a} -> {ys : List a} ->
             xs = ys -> x :: xs = x :: ys
@@ -28,4 +29,15 @@ myReverse xs = reverse' [] xs
         reverse' {m = S len} acc (x :: xs)
                         = rewrite sym (plusSuccRightSucc k len) in
                                   (reverse' (x :: acc) xs)
+
   
+    
+headUnequal : DecEq a => {xs : Vect n a} -> {ys : Vect n a} ->
+  (contra : (x = y) -> Void) -> ((x :: xs) = (y :: ys)) -> Void
+  
+headUnequal contra Refl = contra Refl
+
+tailUnequal : DecEq a => {xs : Vect n a} -> {ys : Vect n a} ->
+  (contra : (xs = ys) -> Void) -> ((x :: xs) = (y :: ys)) -> Void
+
+tailUnequal contra Refl = contra Refl
