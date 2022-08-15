@@ -1,4 +1,4 @@
-
+import Data.List.Views
 
 data TakeN : List a -> Type where
      Fewer : TakeN xs
@@ -21,3 +21,18 @@ halves : List a -> (List a, List a)
 halves xs with (takeN (cast ((cast (length xs)) `div` 2)) xs)
   halves xs | Fewer = ([], xs)
   halves (ys ++ zs) | Exact ys = (ys, zs)
+
+--- 10.2 ---
+-- 1
+equalSuffix : Eq a => List a -> List a -> List a
+equalSuffix lst1 lst2 with (snocList lst1, snocList lst2)
+  equalSuffix [] _ | (_, _) = []
+  equalSuffix _ [] | (_, _) = []
+  equalSuffix _ _ | (Snoc x xs xr, Snoc y ys yr) =
+    if x == y then (equalSuffix _ _ | (xr, yr)) ++ [x] else []
+  
+-- TODO: 2
+
+-- TODO: 3
+
+-- TODO: 4
