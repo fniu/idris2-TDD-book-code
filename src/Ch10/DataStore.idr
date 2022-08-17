@@ -41,3 +41,10 @@ storeViewHelp : {size : _} ->
                 (items : Vect size (SchemaType schema)) ->
                 StoreView schema (MkData size items)
                  
+storeViewHelp [] = SNil
+storeViewHelp (val :: xs) = SAdd _ _ (storeViewHelp xs)
+  
+export
+storeView : (store : DataStore schema) -> StoreView schema store
+storeView (MkData size items)
+  = storeViewHelp items
