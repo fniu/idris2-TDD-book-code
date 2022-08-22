@@ -55,3 +55,22 @@ randoms seed = let seed' = 1664525 * seed + 1013904223 in
                    (seed' `shiftR` 2) :: randoms seed'
 bound x with (divides x 12)
   bound ((12 * div) + rem) | (DivBy div rem prf) = rem + 1
+
+-- 4
+
+square_root_approx : (number : Double) -> (approx: Double) -> Stream Double
+  
+square_root_approx number approx = let app' = (approx + (number / approx)) / 2 in
+                                   app' :: square_root_approx number app'
+
+square_root_bound : (max : Nat) -> (number : Double) -> (bound : Double) ->
+                    (approxs : Stream Double) -> Double
+  
+square_root_bound 0 number bound (x :: y) = x
+square_root_bound (S k) number bound (x :: y) = if abs (x * x - number) <= bound then x
+                                                else square_root_bound k number bound y
+  
+square_root : (number : Double) -> Double
+square_root number = square_root_bound 100 number 0.000000000001 (square_root_approx number number)
+
+
