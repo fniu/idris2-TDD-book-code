@@ -1,5 +1,6 @@
 import Data.Bits
 import Data.Primitives.Views
+import Data.String
 
 -- 11.1
 
@@ -73,4 +74,35 @@ square_root_bound (S k) number bound (x :: y) = if abs (x * x - number) <= bound
 square_root : (number : Double) -> Double
 square_root number = square_root_bound 100 number 0.000000000001 (square_root_approx number number)
 
+-- 11.2
 
+data InfIO : Type where
+  Do : IO a -> (a -> Inf InfIO) -> InfIO
+  Seq : IO () -> Inf InfIO -> InfIO
+  
+(>>=) : IO a -> (a -> Inf InfIO) -> InfIO
+(>>=) = Do
+
+(>>) :  IO () -> Inf InfIO -> InfIO
+(>>) = Seq
+
+data Fuel = Dry | More (Lazy Fuel)
+
+run : Fuel -> InfIO -> IO()
+run Dry _ = putStrLn "Out of fuel"
+run (More x) (Do y f) = do res <- y
+                           run x (f res)
+run (More fuel) (Seq c d) = do c; run fuel d                           
+partial
+forever : Fuel
+forever = More forever
+
+totalREPL : (prompt : String) -> (action : String -> String) -> InfIO
+totalREPL prompt action = do
+  putStr prompt
+  s <- getLine
+  putStr $ action s
+  totalREPL prompt action
+
+
+-- 113.3 TODO
