@@ -20,14 +20,20 @@ testTree = Node (Node (Node Empty "Jim" Empty) "Fred"
                 (Node Empty "Bob" (Node Empty "Eve" Empty))
   
 countEmpty : Tree a -> State Nat ()
-countEmpty Empty = put 1
-countEmpty (Node Empty y Empty) = do x <- get
-                                     put (x+2)
-countEmpty (Node left y Empty) = do x <- get
-                                    put (x+1)
-                                    countEmpty left
-countEmpty (Node Empty y right) = do x <- get
-                                     put (x+1)
-                                     countEmpty right
+countEmpty Empty = do x <- get
+                      put (x+1)
 countEmpty (Node left y right) = do countEmpty left
                                     countEmpty right
+
+-- 3
+
+countEmptyNode : Tree a -> State (Nat, Nat) ()
+
+countEmptyNode Empty = do (x, y) <- get
+                          put (x+1, y)
+countEmptyNode (Node left a right)
+  = do (x, y) <- get
+       put (x, y+1)
+       countEmptyNode left
+       countEmptyNode right
+
