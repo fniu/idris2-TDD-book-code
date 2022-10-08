@@ -6,7 +6,7 @@ data State : (stateType : Type) -> Type -> Type where
 
      Pure : ty -> State stateType ty
      Bind : State stateType a -> (a -> State stateType b) ->
-             State stateType b
+            State stateType b
 
 get : State stateType stateType
 get = Get
